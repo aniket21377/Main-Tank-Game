@@ -1,0 +1,31 @@
+public class GameState implements Serializable {
+    private int score;
+    private transient boolean gameOver; // this field will not be serialized
+    private List<Object> objects;
+
+    public void save() {
+        try {
+            FileOutputStream fos = new FileOutputStream("gameState.ser");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(this);
+            oos.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static GameState load() {
+        try {
+            FileInputStream fis = new FileInputStream("gameState.ser");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            GameState gameState = (GameState) ois.readObject();
+            ois.close();
+            fis.close();
+            return gameState;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+}
